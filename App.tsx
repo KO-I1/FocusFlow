@@ -51,7 +51,6 @@ function App() {
   // Keyboard Shortcuts Handler
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ignore if user is typing in an input or textarea
       if (['INPUT', 'TEXTAREA'].includes((e.target as HTMLElement).tagName)) {
         return;
       }
@@ -91,6 +90,15 @@ function App() {
     });
   }, [currentVideo]);
 
+  const handleRenameHistoryItem = (id: string, newTitle: string) => {
+    setHistory(prev => prev.map(item => 
+      item.id === id ? { ...item, title: newTitle } : item
+    ));
+    if (currentVideo?.id === id) {
+      setCurrentVideo(prev => prev ? { ...prev, title: newTitle } : null);
+    }
+  };
+
   const handleVideoLoad = (url: string) => {
     const id = extractYoutubeId(url);
     if (!id) {
@@ -125,7 +133,6 @@ function App() {
 
   return (
     <div ref={containerRef} className="h-screen w-screen bg-[#050507] text-zinc-100 flex overflow-hidden font-sans">
-      {/* Navigation Sidebar - Hidden in Cinema Mode */}
       {!isCinemaMode && (
         <div className="w-80 hidden lg:flex flex-col p-5 border-r border-white/5 bg-[#08080a] animate-in slide-in-from-left duration-300">
           <div className="mb-8 flex items-center gap-3 px-2">
@@ -167,6 +174,7 @@ function App() {
                   setIsFocusing(false);
                 }
               }}
+              onRename={handleRenameHistoryItem}
               onExport={() => {}}
               onImport={() => {}}
             />
@@ -174,9 +182,7 @@ function App() {
         </div>
       )}
 
-      {/* Main Workspace */}
       <div className="flex-1 flex flex-col relative transition-all duration-300">
-        {/* Top Header / URL Bar */}
         <header className={`z-20 w-full p-4 flex justify-center border-b border-white/5 bg-black/20 backdrop-blur-md transition-all duration-300 ${isCinemaMode ? 'py-2 opacity-40 hover:opacity-100' : ''}`}>
           <form onSubmit={handleUrlSubmit} className="relative w-full max-w-2xl flex items-center gap-4">
             <div className="relative flex-1">
@@ -224,7 +230,6 @@ function App() {
           </form>
         </header>
 
-        {/* Workspace Grid */}
         <main className={`flex-1 flex gap-6 min-h-0 overflow-hidden transition-all duration-300 ${isCinemaMode ? 'p-0 gap-0' : 'p-6'}`}>
           <div className="flex-1 flex flex-col min-w-0 h-full">
             {activeVideoId ? (
@@ -254,21 +259,10 @@ function App() {
                  <p className="text-zinc-400 max-w-md mx-auto mb-8 text-sm leading-relaxed">
                    Paste only the content you truly need to learn. FocusFlow strips away the recommendations, comments, and algorithm triggers that keep you scrolling.
                  </p>
-                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-left">
-                       <h3 className="text-xs font-bold text-primary uppercase tracking-tighter mb-1">Intentionality</h3>
-                       <p className="text-xs text-zinc-500">Only watch what you planned to watch before opening this app.</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-left">
-                       <h3 className="text-xs font-bold text-accent uppercase tracking-tighter mb-1">AI Synthesis</h3>
-                       <p className="text-xs text-zinc-500">Transform passive watching into active learning with AI Studio.</p>
-                    </div>
-                 </div>
               </div>
             )}
           </div>
 
-          {/* AI Side Studio - Hidden in Cinema Mode */}
           {!isCinemaMode && (
             <div className="w-[400px] hidden xl:flex flex-col h-full shrink-0 animate-in slide-in-from-right duration-300">
                <AIStudio 

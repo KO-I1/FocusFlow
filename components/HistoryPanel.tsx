@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { VideoHistoryItem } from '../types';
-import { PlayCircle, Trash2, Download, Upload, FileJson } from 'lucide-react';
+import { PlayCircle, Trash2, Download, Upload, FileJson, Pencil, Check, X } from 'lucide-react';
 
 interface HistoryPanelProps {
   history: VideoHistoryItem[];
   onSelect: (item: VideoHistoryItem) => void;
   onDelete: (id: string) => void;
+  onRename: (id: string, newTitle: string) => void;
   onExport: () => void;
   onImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -14,9 +15,32 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
   history, 
   onSelect, 
   onDelete, 
+  onRename,
   onExport, 
   onImport 
 }) => {
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editValue, setEditValue] = useState("");
+
+  const startRename = (e: React.MouseEvent, item: VideoHistoryItem) => {
+    e.stopPropagation();
+    setEditingId(item.id);
+    setEditValue(item.title);
+  };
+
+  const handleSaveRename = (e?: React.FormEvent | React.MouseEvent) => {
+    e?.preventDefault();
+    if (editingId && editValue.trim()) {
+      onRename(editingId, editValue.trim());
+    }
+    setEditingId(null);
+  };
+
+  const handleCancelRename = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    setEditingId(null);
+  };
+
   return (
     <div className="h-full flex flex-col glass-panel rounded-xl overflow-hidden">
       <div className="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
@@ -49,14 +73,32 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
           history.map((item) => (
             <div 
               key={item.id} 
-              className="group relative bg-zinc-900/50 hover:bg-zinc-800 border border-white/5 hover:border-primary/30 rounded-lg p-3 transition-all cursor-pointer"
+              className={`group relative bg-zinc-900/50 hover:bg-zinc-800 border transition-all cursor-pointer rounded-lg p-3 ${editingId === item.id ? 'border-primary ring-1 ring-primary/20 bg-zinc-800' : 'border-white/5 hover:border-primary/30'}`}
             >
-              <div onClick={() => onSelect(item)} className="flex items-start gap-3">
-                <div className="mt-1 text-primary">
+              <div onClick={() => editingId !== item.id && onSelect(item)} className="flex items-start gap-3">
+                <div className="mt-1 text-primary shrink-0">
                   <PlayCircle size={16} />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="text-sm font-medium text-zinc-200 truncate">{item.title || item.url}</h3>
+                  {editingId === item.id ? (
+                    <form onSubmit={handleSaveRename} className="flex items-center gap-1">
+                      <input 
+                        autoFocus
+                        value={editValue}
+                        onChange={(e) => setEditValue(e.target.value)}
+                        onKeyDown={(e) => e.key === 'Escape' && handleCancelRename()}
+                        className="w-full bg-black/40 border border-white/10 rounded px-2 py-0.5 text-sm text-white focus:outline-none focus:border-primary"
+                      />
+                      <button type="submit" onClick={handleSaveRename} className="p-1 text-emerald-400 hover:text-emerald-300">
+                        <Check size={14} />
+                      </button>
+                      <button type="button" onClick={handleCancelRename} className="p-1 text-zinc-500 hover:text-zinc-300">
+                        <X size={14} />
+                      </button>
+                    </form>
+                  ) : (
+                    <h3 className="text-sm font-medium text-zinc-200 truncate pr-12">{item.title || item.url}</h3>
+                  )}
                   <div className="flex items-center gap-2 mt-2">
                     <div className="h-1 flex-1 bg-zinc-700 rounded-full overflow-hidden">
                       <div 
@@ -70,12 +112,25 @@ export const HistoryPanel: React.FC<HistoryPanelProps> = ({
                   </div>
                 </div>
               </div>
-              <button 
-                onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
-                className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 text-zinc-500 hover:text-red-400 transition-opacity"
-              >
-                <Trash2 size={14} />
-              </button>
+              
+              {editingId !== item.id && (
+                <div className="absolute top-2 right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button 
+                    onClick={(e) => startRename(e, item)}
+                    className="p-1.5 bg-black/40 hover:bg-primary/20 text-zinc-400 hover:text-primary rounded-md transition-colors"
+                    title="Rename"
+                  >
+                    <Pencil size={12} />
+                  </button>
+                  <button 
+                    onClick={(e) => { e.stopPropagation(); onDelete(item.id); }}
+                    className="p-1.5 bg-black/40 hover:bg-red-400/20 text-zinc-500 hover:text-red-400 rounded-md transition-colors"
+                    title="Delete"
+                  >
+                    <Trash2 size={12} />
+                  </button>
+                </div>
+              )}
             </div>
           ))
         )}
