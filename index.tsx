@@ -12,11 +12,12 @@ interface State {
   error: Error | null;
 }
 
-// ErrorBoundary component to catch rendering errors in the application.
-// Fix: Use React.Component directly and initialize in a standard constructor to ensure 'props' and 'state' are correctly typed and accessible by the compiler.
+// Fixed ErrorBoundary by extending React.Component with <Props, State> generics. 
+// This ensures that 'this.props' and 'this.state' are correctly typed and recognized by the TypeScript compiler.
 class ErrorBoundary extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    // Explicitly initialize state which is now correctly inherited and typed from React.Component.
     this.state = {
       hasError: false,
       error: null
@@ -34,7 +35,7 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   render() {
-    // If an error has been caught, render the fallback UI.
+    // Access state through this.state, which is now properly inherited and typed.
     if (this.state.hasError) {
       return (
         <div style={{ padding: 20, background: '#09090b', color: '#ef4444', height: '100vh', fontFamily: 'monospace' }}>
@@ -44,8 +45,7 @@ class ErrorBoundary extends React.Component<Props, State> {
       );
     }
 
-    // Otherwise, render children normally.
-    // Fix: Accessing this.props.children now correctly recognized via standard inheritance from React.Component.
+    // Access props through this.props, which is now properly recognized through inheritance.
     return this.props.children;
   }
 }

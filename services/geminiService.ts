@@ -1,15 +1,19 @@
 
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize AI
-// apiKey must be obtained exclusively from process.env.API_KEY per guidelines.
-const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-
+/**
+ * Generates study content using the Gemini 3 Flash model.
+ * Adheres to guidelines by initializing the GoogleGenAI instance inside the function
+ * using the mandatory process.env.API_KEY environment variable.
+ */
 export const generateStudyAid = async (
   videoTitle: string, 
   userNotes: string, 
   mode: 'plan' | 'quiz' | 'summary'
 ): Promise<string> => {
+  // Always create a new GoogleGenAI instance right before the call to ensure the latest key is used.
+  const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+  
   let prompt = "";
 
   if (mode === 'plan') {
@@ -30,6 +34,7 @@ export const generateStudyAid = async (
   }
 
   try {
+    // Using ai.models.generateContent directly with the model and prompt as per updated SDK guidelines.
     const response = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
       contents: prompt,
@@ -37,6 +42,7 @@ export const generateStudyAid = async (
         systemInstruction: "You are a helpful study assistant. Always provide responses in plain text only. Never use Markdown syntax like hashtags for headers, asterisks for bold/italic, or backticks for code. Use standard line breaks and spacing for organization.",
       }
     });
+    // Directly accessing the .text property from the response object.
     return response.text || "No response generated.";
   } catch (error) {
     console.error("AI Error:", error);
