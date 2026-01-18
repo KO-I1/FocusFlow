@@ -136,12 +136,12 @@ function App() {
       {!isCinemaMode && (
         <div className="w-80 hidden lg:flex flex-col p-5 border-r border-white/5 bg-[#08080a] animate-in slide-in-from-left duration-300">
           <div className="mb-8 flex items-center gap-3 px-2">
-            <div className="w-12 h-12 flex items-center justify-center">
-              <img src="https://freeimage.host/i/fUvnyN9" alt="YouTube" className="w-full h-full object-contain" />
+            <div className="w-10 h-10 flex items-center justify-center shrink-0">
+              <img src="/favicon.svg" alt="YouTube" className="w-full h-full object-contain" />
             </div>
-            <div>
+            <div className="min-w-0">
               <h1 className="font-bold tracking-tight text-xl leading-none">YouTube</h1>
-              <span className="text-[10px] text-purple-400 uppercase tracking-widest font-bold">Premium Workspace</span>
+              <span className="text-[10px] text-purple-400 uppercase tracking-widest font-bold block mt-1">Premium Workspace</span>
             </div>
           </div>
           
@@ -253,7 +253,7 @@ function App() {
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center p-8 border border-dashed border-white/5 rounded-3xl bg-white/[0.02]">
                  <div className="w-24 h-24 mb-6 animate-pulse-subtle">
-                   <img src="https://freeimage.host/i/fUvnyN9" alt="YouTube" className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
+                   <img src="/favicon.svg" alt="YouTube" className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(168,85,247,0.3)]" />
                  </div>
                  <h2 className="text-2xl font-bold text-white mb-3">YouTube Intentionality</h2>
                  <p className="text-zinc-400 max-w-md mx-auto mb-8 text-sm leading-relaxed">
