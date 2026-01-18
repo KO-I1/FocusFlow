@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { HistoryPanel } from './components/HistoryPanel';
 import { AIStudio } from './components/AIStudio';
 import { VideoHistoryItem } from './types';
-import { AlertCircle, Timer, Zap, Target, ArrowRight, Maximize, Monitor } from 'lucide-react';
+import { AlertCircle, Timer, Target, ArrowRight, Maximize, Monitor } from 'lucide-react';
 
 const LOCAL_STORAGE_KEY = 'focusflow_history';
 
@@ -136,19 +136,19 @@ function App() {
       {!isCinemaMode && (
         <div className="w-80 hidden lg:flex flex-col p-5 border-r border-white/5 bg-[#08080a] animate-in slide-in-from-left duration-300">
           <div className="mb-8 flex items-center gap-3 px-2">
-            <div className="w-10 h-10 bg-primary/20 rounded-xl flex items-center justify-center border border-primary/20">
-              <Zap size={22} className="text-primary fill-primary/20" />
+            <div className="w-12 h-12 flex items-center justify-center">
+              <img src="https://freeimage.host/i/fUvnyN9" alt="YouTube" className="w-full h-full object-contain" />
             </div>
             <div>
-              <h1 className="font-bold tracking-tight text-lg leading-none">FocusFlow</h1>
-              <span className="text-[10px] text-zinc-500 uppercase tracking-widest font-semibold">AI Study Lab</span>
+              <h1 className="font-bold tracking-tight text-xl leading-none">YouTube</h1>
+              <span className="text-[10px] text-purple-400 uppercase tracking-widest font-bold">Premium Workspace</span>
             </div>
           </div>
           
           <div className="mb-6 p-4 rounded-xl bg-white/5 border border-white/5">
             <div className="flex items-center justify-between mb-2">
               <span className="text-xs text-zinc-400 font-medium flex items-center gap-1.5">
-                <Timer size={14} /> Active Session
+                <Timer size={14} /> Focus Session
               </span>
               <span className="text-xs font-mono text-primary">{formatFocusTime(focusTime)}</span>
             </div>
@@ -252,12 +252,12 @@ function App() {
               </div>
             ) : (
               <div className="h-full flex flex-col items-center justify-center text-center p-8 border border-dashed border-white/5 rounded-3xl bg-white/[0.02]">
-                 <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6 animate-pulse-subtle">
-                   <Target size={40} className="text-primary" />
+                 <div className="w-24 h-24 mb-6 animate-pulse-subtle">
+                   <img src="https://freeimage.host/i/fUvnyN9" alt="YouTube" className="w-full h-full object-contain filter drop-shadow-[0_0_15px_rgba(168,85,247,0.5)]" />
                  </div>
-                 <h2 className="text-2xl font-bold text-white mb-3">Break the 10-Day Streak</h2>
+                 <h2 className="text-2xl font-bold text-white mb-3">YouTube Intentionality</h2>
                  <p className="text-zinc-400 max-w-md mx-auto mb-8 text-sm leading-relaxed">
-                   Paste only the content you truly need to learn. FocusFlow strips away the recommendations, comments, and algorithm triggers that keep you scrolling.
+                   Turn the 10-day streak into a 10-day study sprint. Focus only on the content you searched for. No distractions, just learning.
                  </p>
               </div>
             )}
